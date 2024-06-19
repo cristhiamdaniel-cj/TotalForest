@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE instance-profile
+        SYSTEM "https://resources.jetbrains.com/writerside/1.0/product-profile.dtd">
+
+<instance-profile id="in"
+                 name="Instance Name"
+                 start-page="starter.md">
+
+    <toc-element topic="starter.md"/>
+    <toc-element topic="01_datos_origen.md"/>
+    <toc-element topic="02_data_procesador.md"/>
+    <toc-element topic="03_ingenieria_caracteristicas.md"/>
+    <toc-element topic="04_modelamiento.md"/>
+    <toc-element topic="05_red_neuronal.md"/>
+    <toc-element topic="06_app_basica.md"/>
+    <toc-element topic="07_app_predictora.md"/>
+</instance-profile>

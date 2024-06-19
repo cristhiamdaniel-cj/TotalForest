@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE categories
+        SYSTEM "https://resources.jetbrains.com/writerside/1.0/categories.dtd">
+<categories>
+    <category id="wrs" name="Writerside documentation" order="1"/>
+    <category id="data_origin" name="Origen de los Datos" order="2"/>
+    <category id="data_processing" name="Procesamiento de Datos" order="3"/>
+    <category id="feature_engineering" name="Ingeniería de Características" order="4"/>
+    <category id="model_training" name="Entrenamiento de Modelos" order="5"/>
+    <category id="neural_network_training" name="Entrenamiento de Redes Neuronales" order="6"/>
+    <category id="flask_app" name="Aplicación Flask" order="7"/>
+    <category id="api" name="API de Predicción" order="8"/>
+</categories>
