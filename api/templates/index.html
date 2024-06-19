@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Model Prediction API</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <img src="https://ekosnegocios.com/image/posts/header/9256.jpg" alt="Header Image">
+            <h1>Model Prediction API</h1>
+        </header>
+    <form id="prediction-form">
+        <label for="Unnamed: 0">Unnamed: 0:</label>
+        <input type="text" id="Unnamed: 0" name="Unnamed: 0" required><br><br>
+        <label for="Age">Age:</label>
+        <input type="text" id="Age" name="Age" required><br><br>
+        <label for="Sex_male">Sex (male=1, female=0):</label>
+        <input type="text" id="Sex_male" name="Sex_male" required><br><br>
+        <label for="Job">Job:</label>
+        <input type="text" id="Job" name="Job" required><br><br>
+        <label for="Housing_own">Housing (own=1, rent=0):</label>
+        <input type="text" id="Housing_own" name="Housing_own" required><br><br>
+        <label for="Saving_accounts_little">Saving accounts (little=1, moderate=0.5, rich=0):</label>
+        <input type="text" id="Saving_accounts_little" name="Saving_accounts_little" required><br><br>
+        <label for="Checking_account_moderate">Checking account (moderate=1, little=0.5, rich=0):</label>
+        <input type="text" id="Checking_account_moderate" name="Checking_account_moderate" required><br><br>
+        <label for="Credit_amount">Credit amount:</label>
+        <input type="text" id="Credit_amount" name="Credit_amount" required><br><br>
+        <label for="Duration">Duration:</label>
+        <input type="text" id="Duration" name="Duration" required><br><br>
+        <label for="Purpose_vacation/others">Purpose (vacation/others=1, repairs=0):</label>
+        <input type="text" id="Purpose_vacation/others" name="Purpose_vacation/others" required><br><br>
+        <label for="Purpose_repairs">Purpose (repairs=1, vacation/others=0):</label>
+        <input type="text" id="Purpose_repairs" name="Purpose_repairs" required><br><br>
+
+        <!-- Añadir todos los campos faltantes con un valor predeterminado -->
+        <input type="hidden" name="Sex_female" value="0">
+        <input type="hidden" name="Housing_rent" value="0">
+        <input type="hidden" name="Housing_free" value="0">
+        <input type="hidden" name="Saving_accounts_moderate" value="0">
+        <input type="hidden" name="Saving_accounts_rich" value="0">
+        <input type="hidden" name="Saving_accounts_nan" value="0">
+        <input type="hidden" name="Checking_account_little" value="0">
+        <input type="hidden" name="Checking_account_rich" value="0">
+        <input type="hidden" name="Checking_account_nan" value="0">
+        <input type="hidden" name="Purpose_radio/TV" value="0">
+        <input type="hidden" name="Purpose_furniture/equipment" value="0">
+        <input type="hidden" name="Purpose_new car" value="0">
+        <input type="hidden" name="Purpose_used car" value="0">
+        <input type="hidden" name="Purpose_business" value="0">
+        <input type="hidden" name="Purpose_domestic appliances" value="0">
+        <input type="hidden" name="Purpose_education" value="0">
+        <input type="hidden" name="Purpose_car" value="0">
+        <input type="hidden" name="Saving_accounts_quite rich" value="0">
+
+        <input type="submit" value="Predict">
+    </form>
+    <h2 id="result"></h2>
+    <h3 id="category"></h3>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
