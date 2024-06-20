@@ -1,0 +1,134 @@
+<!DOCTYPE html SYSTEM "about:legacy-compat">
+<html lang="en-US" data-preset="contrast" data-primary-color="#307FFF"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta charset="UTF-8"><meta name="robots" content="noindex"><meta name="built-on" content="2024-06-20T08:05:37.719400959"><title>Modelamiento: Ramdom Forest y Decision Tree | Instance Name</title><script type="application/json" id="virtual-toc-data">[{"id":"descripci-n-general","level":0,"title":"Descripción General","anchor":"#descripci-n-general"},{"id":"m-todos","level":0,"title":"Métodos","anchor":"#m-todos"},{"id":"resultados-de-la-comparaci-n-de-modelos","level":0,"title":"Resultados de la Comparación de Modelos","anchor":"#resultados-de-la-comparaci-n-de-modelos"},{"id":"conclusi-n","level":0,"title":"Conclusión","anchor":"#conclusi-n"}]</script><script type="application/json" id="topic-shortcuts"></script><link href="https://resources.jetbrains.com/writerside/apidoc/6.10.0-b267/app.css" rel="stylesheet"><meta name="msapplication-TileColor" content="#000000"><link rel="apple-touch-icon" sizes="180x180" href="https://jetbrains.com/apple-touch-icon.png"><link rel="icon" type="image/png" sizes="32x32" href="https://jetbrains.com/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="https://jetbrains.com/favicon-16x16.png"><meta name="msapplication-TileImage" content="https://resources.jetbrains.com/storage/ui/favicons/mstile-144x144.png"><meta name="msapplication-square70x70logo" content="https://resources.jetbrains.com/storage/ui/favicons/mstile-70x70.png"><meta name="msapplication-square150x150logo" content="https://resources.jetbrains.com/storage/ui/favicons/mstile-150x150.png"><meta name="msapplication-wide310x150logo" content="https://resources.jetbrains.com/storage/ui/favicons/mstile-310x150.png"><meta name="msapplication-square310x310logo" content="https://resources.jetbrains.com/storage/ui/favicons/mstile-310x310.png"><meta name="image" content=""><!-- Open Graph --><meta property="og:title" content="Modelamiento: Ramdom Forest y Decision Tree | Instance Name"><meta property="og:description" content=""><meta property="og:image" content=""><meta property="og:site_name" content="Instance Name Help"><meta property="og:type" content="website"><meta property="og:locale" content="en_US"><meta property="og:url" content="writerside-documentation/04-modelamiento.html"><!-- End Open Graph --><!-- Twitter Card --><meta name="twitter:card" content="summary_large_image"><meta name="twitter:site" content=""><meta name="twitter:title" content="Modelamiento: Ramdom Forest y Decision Tree | Instance Name"><meta name="twitter:description" content=""><meta name="twitter:creator" content=""><meta name="twitter:image:src" content=""><!-- End Twitter Card --><!-- Schema.org WebPage --><script type="application/ld+json">{
+    "@context": "http://schema.org",
+    "@type": "WebPage",
+    "@id": "writerside-documentation/04-modelamiento.html#webpage",
+    "url": "writerside-documentation/04-modelamiento.html",
+    "name": "Modelamiento: Ramdom Forest y Decision Tree | Instance Name",
+    "description": "",
+    "image": "",
+    "inLanguage":"en-US"
+}</script><!-- End Schema.org --><!-- Schema.org WebSite --><script type="application/ld+json">{
+    "@type": "WebSite",
+    "@id": "writerside-documentation/#website",
+    "url": "writerside-documentation/",
+    "name": "Instance Name Help"
+}</script><!-- End Schema.org --></head><body data-id="04_modelamiento" data-main-title="Modelamiento: Ramdom Forest y Decision Tree" data-article-props="{&quot;seeAlsoStyle&quot;:&quot;links&quot;}" data-template="article" data-breadcrumbs=""><div class="wrapper"><main class="panel _main"><header class="panel__header"><div class="container"><h3>Instance Name  Help</h3><div class="panel-trigger"></div></div></header><section class="panel__content"><div class="container"><article class="article" data-shortcut-switcher="inactive"><h1 data-toc="04_modelamiento" id="04_modelamiento.md">Modelamiento: Ramdom Forest y Decision Tree</h1><section class="chapter"><h2 id="descripci-n-general" data-toc="descripci-n-general">Descripci&oacute;n General</h2><p id="i3ol798_6">La clase <code class="code" id="i3ol798_7">ModelTraining</code> es responsable de cargar los datos, entrenar los modelos, evaluar su desempe&ntilde;o y comparar diferentes modelos de aprendizaje autom&aacute;tico. Esta clase utiliza modelos de regresi&oacute;n de &aacute;rbol de decisi&oacute;n (<code class="code" id="i3ol798_8">DecisionTreeRegressor</code>) y de bosque aleatorio (<code class="code" id="i3ol798_9">RandomForestRegressor</code>).</p></section><section class="chapter"><h2 id="m-todos" data-toc="m-todos">M&eacute;todos</h2><section class="chapter"><h3 id="init-self-train-path-test-path-output-path-logger" data-toc="init-self-train-path-test-path-output-path-logger"><code class="code" id="i3ol798_11">__init__(self, train_path, test_path, output_path, logger)</code></h3><p id="i3ol798_12">Inicializa la clase con las rutas a los archivos de datos de entrenamiento y prueba, la ruta de salida para guardar los resultados y el logger para registrar eventos.</p></section><section class="chapter"><h3 id="load-data-self" data-toc="load-data-self"><code class="code" id="i3ol798_14">load_data(self)</code></h3><p id="i3ol798_15">Carga los datos de entrenamiento y prueba desde archivos CSV y separa las caracter&iacute;sticas (X) de la variable objetivo (y). Tambi&eacute;n codifica la variable objetivo <code class="code" id="i3ol798_16">Risk</code> utilizando <code class="code" id="i3ol798_17">LabelEncoder</code>.</p><div class="code-block" data-lang="python">
+def load_data(self):
+    try:
+        train_data = pd.read_csv(self.train_path)
+        test_data = pd.read_csv(self.test_path)
+
+        print(&quot;Datos de entrenamiento cargados:&quot;)
+        print(train_data.head())
+
+        print(&quot;Datos de prueba cargados:&quot;)
+        print(test_data.head())
+
+        y_train = train_data['Risk']
+        X_train = train_data.drop(columns=['Risk'])
+        y_test = test_data['Risk']
+        X_test = test_data.drop(columns=['Risk'])
+
+        print(&quot;X_train:&quot;)
+        print(X_train.head())
+
+        print(&quot;y_train antes de codificar:&quot;)
+        print(y_train.head())
+
+        # Codificar la variable objetivo
+        encoder = LabelEncoder()
+        y_train = encoder.fit_transform(y_train)
+        y_test = encoder.transform(y_test)
+
+        print(&quot;y_train después de codificar:&quot;)
+        print(y_train[:5])
+
+        self.logger.info('Datos cargados para el modelado.')
+        print(&quot;Datos cargados para el modelado.&quot;)
+        return X_train, X_test, y_train, y_test
+    except Exception as e:
+        self.logger.error(f'Error al cargar los datos: {e}')
+        print(f'Error al cargar los datos: {e}')
+        raise
+</div></section><section class="chapter"><h3 id="train-and-evaluate-self-model-x-train-y-train-x-test-y-test" data-toc="train-and-evaluate-self-model-x-train-y-train-x-test-y-test"><code class="code" id="i3ol798_20">train_and_evaluate(self, model, X_train, y_train, X_test, y_test)</code></h3><p id="i3ol798_21">Entrena y eval&uacute;a un modelo espec&iacute;fico utilizando validaci&oacute;n cruzada, ajusta el modelo a los datos de entrenamiento, predice y eval&uacute;a el desempe&ntilde;o en los conjuntos de datos de entrenamiento y prueba, y guarda el modelo entrenado.</p><div class="code-block" data-lang="python">
+def train_and_evaluate(self, model, X_train, y_train, X_test, y_test):
+    try:
+        print(f&quot;Training model: {model.__class__.__name__}&quot;)
+        cv_results = cross_val_score(model, X_train, y_train, cv=5, scoring='neg_mean_squared_error')
+        mean_mse = -np.mean(cv_results)
+        std_mse = np.std(cv_results)
+
+        model.fit(X_train, y_train)
+        y_train_pred = model.predict(X_train)
+        mse_train = mean_squared_error(y_train, y_train_pred)
+        mae_train = mean_absolute_error(y_train, y_train_pred)
+        r2_train = r2_score(y_train, y_train_pred)
+
+        y_test_pred = model.predict(X_test)
+        mse_test = mean_squared_error(y_test, y_test_pred)
+        mae_test = mean_absolute_error(y_test, y_test_pred)
+        r2_test = r2_score(y_test, y_test_pred)
+
+        print(f&quot;Model: {model.__class__.__name__}, Mean MSE: {mean_mse}, Std MSE: {std_mse}, MSE Train: {mse_train}, MAE Train: {mae_train}, R2 Train: {r2_train}, MSE Test: {mse_test}, MAE Test: {mae_test}, R2 Test: {r2_test}&quot;)
+
+        # Guardar el modelo entrenado
+        model_path = os.path.join(self.output_path, f'{model.__class__.__name__}.joblib')
+        joblib.dump(model, model_path)
+        print(f'Modelo {model.__class__.__name__} guardado en {model_path}')
+        self.logger.info(f'Modelo {model.__class__.__name__} guardado en {model_path}')
+
+        return mean_mse, std_mse, mse_train, mae_train, r2_train, mse_test, mae_test, r2_test
+    except Exception as e:
+        self.logger.error(f'Error al entrenar y evaluar el modelo {model.__class__.__name__}: {e}')
+        print(f'Error al entrenar y evaluar el modelo {model.__class__.__name__}: {e}')
+        raise
+</div></section><section class="chapter"><h3 id="compare-models-self-x-train-y-train-x-test-y-test" data-toc="compare-models-self-x-train-y-train-x-test-y-test"><code class="code" id="i3ol798_24">compare_models(self, X_train, y_train, X_test, y_test)</code></h3><p id="i3ol798_25">Compara el desempe&ntilde;o de varios modelos (en este caso, <code class="code" id="i3ol798_26">DecisionTreeRegressor</code> y <code class="code" id="i3ol798_27">RandomForestRegressor</code>) utilizando los m&eacute;todos <code class="code" id="i3ol798_28">train_and_evaluate</code>. Los resultados de la comparaci&oacute;n se guardan en un archivo CSV y se muestran en una tabla.</p><div class="code-block" data-lang="python">
+def compare_models(self, X_train, y_train, X_test, y_test):
+    try:
+        results = []
+        models = [DecisionTreeRegressor(), RandomForestRegressor()]
+
+        for model in models:
+            print(f&quot;Evaluando modelo: {model.__class__.__name__}&quot;)
+            mean_mse, std_mse, mse_train, mae_train, r2_train, mse_test, mae_test, r2_test = self.train_and_evaluate(model, X_train, y_train, X_test, y_test)
+            results.append({
+                'model': model.__class__.__name__,
+                'mean_mse': mean_mse,
+                'std_mse': std_mse,
+                'mse_train': mse_train,
+                'mae_train': mae_train,
+                'r2_train': r2_train,
+                'mse_test': mse_test,
+                'mae_test': mae_test,
+                'r2_test': r2_test
+            })
+            print(f'{model.__class__.__name__}: mean_mse={mean_mse}, std_mse={std_mse}, mse_train={mse_train}, mae_train={mae_train}, r2_train={r2_train}, mse_test={mse_test}, mae_test={mae_test}, r2_test={r2_test}')
+
+        results_df = pd.DataFrame(results)
+        results_path = os.path.join(self.output_path, 'model_comparison_results.csv')
+        results_df.to_csv(results_path, index=False)
+        self.logger.info('Resultados de la comparación de modelos guardados.')
+        print('Resultados de la comparación de modelos guardados.')
+
+        # Imprimir resultados en una tabla bonita
+        table = PrettyTable()
+        table.field_names = [&quot;Model&quot;, &quot;Mean MSE&quot;, &quot;Std MSE&quot;, &quot;MSE Train&quot;, &quot;MAE Train&quot;, &quot;R2 Train&quot;, &quot;MSE Test&quot;, &quot;MAE Test&quot;, &quot;R2 Test&quot;]
+        for result in results:
+            table.add_row([
+                result['model'],
+                f&quot;{result['mean_mse']:.5f}&quot;,
+                f&quot;{result['std_mse']:.5f}&quot;,
+                f&quot;{result['mse_train']:.5f}&quot;,
+                f&quot;{result['mae_train']:.5f}&quot;,
+                f&quot;{result['r2_train']:.5f}&quot;,
+                f&quot;{result['mse_test']:.5f}&quot;,
+                f&quot;{result['mae_test']:.5f}&quot;,
+                f&quot;{result['r2_test']:.5f}&quot;
+            ])
+        print(table)
+    except Exception as e:
+        self.logger.error(f'Error al comparar modelos: {e}')
+        print(f'Error al comparar modelos: {e}')
+        raise
+</div></section></section><section class="chapter"><h2 id="resultados-de-la-comparaci-n-de-modelos" data-toc="resultados-de-la-comparaci-n-de-modelos">Resultados de la Comparaci&oacute;n de Modelos</h2><section class="chapter"><h3 id="decisiontreeregressor" data-toc="decisiontreeregressor">DecisionTreeRegressor</h3><ul class="list _bullet" id="i3ol798_30"><li class="list__item" id="i3ol798_31"><p>Mean MSE: 0.32500</p></li><li class="list__item" id="i3ol798_32"><p>Std MSE: 0.04312</p></li><li class="list__item" id="i3ol798_33"><p>MSE Train: 0.00000</p></li><li class="list__item" id="i3ol798_34"><p>MAE Train: 0.00000</p></li><li class="list__item" id="i3ol798_35"><p>R2 Train: 1.00000</p></li><li class="list__item" id="i3ol798_36"><p>MSE Test: 0.35500</p></li><li class="list__item" id="i3ol798_37"><p>MAE Test: 0.35500</p></li><li class="list__item" id="i3ol798_38"><p>R2 Test: -0.70694</p></li></ul></section><section class="chapter"><h3 id="randomforestregressor" data-toc="randomforestregressor">RandomForestRegressor</h3><ul class="list _bullet" id="i3ol798_39"><li class="list__item" id="i3ol798_40"><p>Mean MSE: 0.18325</p></li><li class="list__item" id="i3ol798_41"><p>Std MSE: 0.00822</p></li><li class="list__item" id="i3ol798_42"><p>MSE Train: 0.02546</p></li><li class="list__item" id="i3ol798_43"><p>MAE Train: 0.12689</p></li><li class="list__item" id="i3ol798_44"><p>R2 Train: 0.87906</p></li><li class="list__item" id="i3ol798_45"><p>MSE Test: 0.16577</p></li><li class="list__item" id="i3ol798_46"><p>MAE Test: 0.33320</p></li><li class="list__item" id="i3ol798_47"><p>R2 Test: 0.20293</p></li></ul></section></section><section class="chapter"><h2 id="conclusi-n" data-toc="conclusi-n">Conclusi&oacute;n</h2><p id="i3ol798_48">La clase <code class="code" id="i3ol798_49">ModelTraining</code> permite cargar, entrenar y evaluar modelos de manera efectiva, y proporciona una comparaci&oacute;n clara entre diferentes modelos de aprendizaje autom&aacute;tico. En este caso, <code class="code" id="i3ol798_50">RandomForestRegressor</code> mostr&oacute; un mejor desempe&ntilde;o general en comparaci&oacute;n con <code class="code" id="i3ol798_51">DecisionTreeRegressor</code>.</p></section><div class="last-modified">Last modified: 20 junio 2024</div><div data-feedback-placeholder="true"></div><div class="navigation-links _bottom"><a href="03-ingenieria-caracteristicas.html" class="navigation-links__prev">Feature Engineering</a><a href="05-red-neuronal.html" class="navigation-links__next">Red Neuronal</a></div></article><div id="disqus_thread"></div></div></section></main></div><script src="https://resources.jetbrains.com/writerside/apidoc/6.10.0-b267/app.js"></script></body></html>

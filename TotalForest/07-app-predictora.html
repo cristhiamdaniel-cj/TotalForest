@@ -1,0 +1,274 @@
+<!DOCTYPE html SYSTEM "about:legacy-compat">
+<html lang="en-US" data-preset="contrast" data-primary-color="#307FFF"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta charset="UTF-8"><meta name="robots" content="noindex"><meta name="built-on" content="2024-06-20T08:05:37.732263837"><title>API para Predicci&oacute;n con Flask | Instance Name</title><script type="application/json" id="virtual-toc-data">[{"id":"descripci-n-general","level":0,"title":"Descripción General","anchor":"#descripci-n-general"},{"id":"estructura-del-proyecto","level":0,"title":"Estructura del Proyecto","anchor":"#estructura-del-proyecto"},{"id":"c-digo","level":0,"title":"Código","anchor":"#c-digo"},{"id":"c-mo-ejecutar-la-aplicaci-n","level":0,"title":"Cómo Ejecutar la Aplicación","anchor":"#c-mo-ejecutar-la-aplicaci-n"},{"id":"conclusi-n","level":0,"title":"Conclusión","anchor":"#conclusi-n"}]</script><script type="application/json" id="topic-shortcuts"></script><link href="https://resources.jetbrains.com/writerside/apidoc/6.10.0-b267/app.css" rel="stylesheet"><meta name="msapplication-TileColor" content="#000000"><link rel="apple-touch-icon" sizes="180x180" href="https://jetbrains.com/apple-touch-icon.png"><link rel="icon" type="image/png" sizes="32x32" href="https://jetbrains.com/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="https://jetbrains.com/favicon-16x16.png"><meta name="msapplication-TileImage" content="https://resources.jetbrains.com/storage/ui/favicons/mstile-144x144.png"><meta name="msapplication-square70x70logo" content="https://resources.jetbrains.com/storage/ui/favicons/mstile-70x70.png"><meta name="msapplication-square150x150logo" content="https://resources.jetbrains.com/storage/ui/favicons/mstile-150x150.png"><meta name="msapplication-wide310x150logo" content="https://resources.jetbrains.com/storage/ui/favicons/mstile-310x150.png"><meta name="msapplication-square310x310logo" content="https://resources.jetbrains.com/storage/ui/favicons/mstile-310x310.png"><meta name="image" content=""><!-- Open Graph --><meta property="og:title" content="API para Predicci&oacute;n con Flask | Instance Name"><meta property="og:description" content=""><meta property="og:image" content=""><meta property="og:site_name" content="Instance Name Help"><meta property="og:type" content="website"><meta property="og:locale" content="en_US"><meta property="og:url" content="writerside-documentation/07-app-predictora.html"><!-- End Open Graph --><!-- Twitter Card --><meta name="twitter:card" content="summary_large_image"><meta name="twitter:site" content=""><meta name="twitter:title" content="API para Predicci&oacute;n con Flask | Instance Name"><meta name="twitter:description" content=""><meta name="twitter:creator" content=""><meta name="twitter:image:src" content=""><!-- End Twitter Card --><!-- Schema.org WebPage --><script type="application/ld+json">{
+    "@context": "http://schema.org",
+    "@type": "WebPage",
+    "@id": "writerside-documentation/07-app-predictora.html#webpage",
+    "url": "writerside-documentation/07-app-predictora.html",
+    "name": "API para Predicci&oacute;n con Flask | Instance Name",
+    "description": "",
+    "image": "",
+    "inLanguage":"en-US"
+}</script><!-- End Schema.org --><!-- Schema.org WebSite --><script type="application/ld+json">{
+    "@type": "WebSite",
+    "@id": "writerside-documentation/#website",
+    "url": "writerside-documentation/",
+    "name": "Instance Name Help"
+}</script><!-- End Schema.org --></head><body data-id="07_app_predictora" data-main-title="API para Predicción con Flask" data-article-props="{&quot;seeAlsoStyle&quot;:&quot;links&quot;}" data-template="article" data-breadcrumbs=""><div class="wrapper"><main class="panel _main"><header class="panel__header"><div class="container"><h3>Instance Name  Help</h3><div class="panel-trigger"></div></div></header><section class="panel__content"><div class="container"><article class="article" data-shortcut-switcher="inactive"><h1 data-toc="07_app_predictora" id="07_app_predictora.md">API para Predicción con Flask</h1><section class="chapter"><h2 id="descripci-n-general" data-toc="descripci-n-general">Descripci&oacute;n General</h2><p id="-8zuqpw_57">Esta API basada en Flask permite realizar predicciones utilizando un modelo de Random Forest previamente entrenado. Los usuarios pueden enviar datos a la API y recibir una predicci&oacute;n en tiempo real.</p></section><section class="chapter"><h2 id="estructura-del-proyecto" data-toc="estructura-del-proyecto">Estructura del Proyecto</h2><p id="-8zuqpw_58">El proyecto incluye los siguientes archivos clave:</p><ul class="list _bullet" id="-8zuqpw_59"><li class="list__item" id="-8zuqpw_60"><p><code class="code" id="-8zuqpw_61">app.py</code>: El servidor Flask que maneja las solicitudes de predicci&oacute;n.</p></li><li class="list__item" id="-8zuqpw_62"><p><code class="code" id="-8zuqpw_63">index.html</code>: La p&aacute;gina web principal para interactuar con la API.</p></li><li class="list__item" id="-8zuqpw_64"><p><code class="code" id="-8zuqpw_65">script.js</code>: El archivo JavaScript que maneja la l&oacute;gica del formulario.</p></li><li class="list__item" id="-8zuqpw_66"><p><code class="code" id="-8zuqpw_67">style.css</code>: El archivo CSS que define el estilo de la p&aacute;gina web.</p></li></ul></section><section class="chapter"><h2 id="c-digo" data-toc="c-digo">C&oacute;digo</h2><section class="chapter"><h3 id="api-py" data-toc="api-py"><code class="code" id="-8zuqpw_69">api.py</code></h3><p id="-8zuqpw_70">Este archivo define la l&oacute;gica del servidor Flask y los endpoints para la predicci&oacute;n.</p><div class="code-block" data-lang="python">
+import os
+from flask import Flask, request, jsonify, render_template
+import joblib
+
+app = Flask(__name__)
+model_path = '../output/RandomForestRegressor.joblib'
+model = joblib.load(model_path)
+print(f'Modelo cargado desde {model_path}')
+
+# Imprimir las características que espera el modelo
+expected_features = model.feature_names_in_
+print(f'Características esperadas por el modelo: {expected_features}')
+
+
+@app.route('/')
+def home():
+    return render_template('index.html')
+
+
+@app.route('/predict', methods=['POST'])
+def predict():
+    try:
+        # Verificar los datos recibidos
+        print(f'Datos recibidos: {request.json}')
+
+        # Recuperar los datos del formulario
+        data = request.json
+
+        # Calcular CreditAmountPerMonth
+        data['CreditAmountPerMonth'] = data['Credit_amount'] / data['Duration']
+
+        # Crear un array de entrada para el modelo
+        input_data = [
+            data.get('Unnamed: 0', 0), data.get('Age', 0), data.get('Job', 0), data.get('Credit_amount', 0),
+            data.get('Duration', 0),
+            data.get('CreditAmountPerMonth', 0), data.get('Sex_female', 0), data.get('Sex_male', 0),
+            data.get('Housing_free', 0),
+            data.get('Housing_own', 0), data.get('Housing_rent', 0), data.get('Saving_accounts_little', 0),
+            data.get('Saving_accounts_moderate', 0), data.get('Saving_accounts_quite rich', 0),
+            data.get('Saving_accounts_rich', 0),
+            data.get('Saving_accounts_nan', 0), data.get('Checking_account_little', 0),
+            data.get('Checking_account_moderate', 0),
+            data.get('Checking_account_rich', 0), data.get('Checking_account_nan', 0), data.get('Purpose_business', 0),
+            data.get('Purpose_car', 0), data.get('Purpose_domestic appliances', 0), data.get('Purpose_education', 0),
+            data.get('Purpose_furniture/equipment', 0), data.get('Purpose_radio/TV', 0), data.get('Purpose_repairs', 0),
+            data.get('Purpose_vacation/others', 0)
+        ]
+
+        # Imprimir los datos de entrada y las características esperadas por el modelo
+        print(f'Datos de entrada: {input_data}')
+        print(f'Número de características en los datos de entrada: {len(input_data)}')
+        print(f'Número de características esperadas por el modelo: {len(expected_features)}')
+
+        # Realizar la predicción
+        prediction = model.predict([input_data])[0]
+
+        # Convertir la predicción a una categoría
+        prediction_category = 'Bueno' if prediction &gt;= 0.5 else 'Malo'
+
+        # Devolver la predicción y la categoría como JSON
+        return jsonify({
+            'prediction': prediction,
+            'prediction_category': prediction_category
+        })
+    except Exception as e:
+        print(f'Error al realizar la predicción: {e}')
+        return jsonify({'error': str(e)})
+
+
+if __name__ == &quot;__main__&quot;:
+    app.run(debug=True)
+</div></section><section class="chapter"><h3 id="index-html" data-toc="index-html"><code class="code" id="-8zuqpw_73">index.html</code></h3><p id="-8zuqpw_74">La interfaz principal de la aplicaci&oacute;n donde los usuarios pueden ingresar datos para la predicci&oacute;n.</p><div class="code-block" data-lang="markup">
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;Model Prediction API&lt;/title&gt;
+    &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;{{ url_for('static', filename='style.css') }}&quot;&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div class=&quot;container&quot;&gt;
+        &lt;header&gt;
+            &lt;img src=&quot;https://ekosnegocios.com/image/posts/header/9256.jpg&quot; alt=&quot;Header Image&quot;&gt;
+            &lt;h1&gt;Model Prediction API&lt;/h1&gt;
+        &lt;/header&gt;
+    &lt;form id=&quot;prediction-form&quot;&gt;
+        &lt;label for=&quot;Unnamed: 0&quot;&gt;Unnamed: 0:&lt;/label&gt;
+        &lt;input type=&quot;text&quot; id=&quot;Unnamed: 0&quot; name=&quot;Unnamed: 0&quot; required&gt;&lt;br&gt;&lt;br&gt;
+        &lt;label for=&quot;Age&quot;&gt;Age:&lt;/label&gt;
+        &lt;input type=&quot;text&quot; id=&quot;Age&quot; name=&quot;Age&quot; required&gt;&lt;br&gt;&lt;br&gt;
+        &lt;label for=&quot;Sex_male&quot;&gt;Sex (male=1, female=0):&lt;/label&gt;
+        &lt;input type=&quot;text&quot; id=&quot;Sex_male&quot; name=&quot;Sex_male&quot; required&gt;&lt;br&gt;&lt;br&gt;
+        &lt;label for=&quot;Job&quot;&gt;Job:&lt;/label&gt;
+        &lt;input type=&quot;text&quot; id=&quot;Job&quot; name=&quot;Job&quot; required&gt;&lt;br&gt;&lt;br&gt;
+        &lt;label for=&quot;Housing_own&quot;&gt;Housing (own=1, rent=0):&lt;/label&gt;
+        &lt;input type=&quot;text&quot; id=&quot;Housing_own&quot; name=&quot;Housing_own&quot; required&gt;&lt;br&gt;&lt;br&gt;
+        &lt;label for=&quot;Saving_accounts_little&quot;&gt;Saving accounts (little=1, moderate=0.5, rich=0):&lt;/label&gt;
+        &lt;input type=&quot;text&quot; id=&quot;Saving_accounts_little&quot; name=&quot;Saving_accounts_little&quot; required&gt;&lt;br&gt;&lt;br&gt;
+        &lt;label for=&quot;Checking_account_moderate&quot;&gt;Checking account (moderate=1, little=0.5, rich=0):&lt;/label&gt;
+        &lt;input type=&quot;text&quot; id=&quot;Checking_account_moderate&quot; name=&quot;Checking_account_moderate&quot; required&gt;&lt;br&gt;&lt;br&gt;
+        &lt;label for=&quot;Credit_amount&quot;&gt;Credit amount:&lt;/label&gt;
+        &lt;input type=&quot;text&quot; id=&quot;Credit_amount&quot; name=&quot;Credit_amount&quot; required&gt;&lt;br&gt;&lt;br&gt;
+        &lt;label for=&quot;Duration&quot;&gt;Duration:&lt;/label&gt;
+        &lt;input type=&quot;text&quot; id=&quot;Duration&quot; name=&quot;Duration&quot; required&gt;&lt;br&gt;&lt;br&gt;
+        &lt;label for=&quot;Purpose_vacation/others&quot;&gt;Purpose (vacation/others=1, repairs=0):&lt;/label&gt;
+        &lt;input type=&quot;text&quot; id=&quot;Purpose_vacation/others&quot; name=&quot;Purpose_vacation/others&quot; required&gt;&lt;br&gt;&lt;br&gt;
+        &lt;label for=&quot;Purpose_repairs&quot;&gt;Purpose (repairs=1, vacation/others=0):&lt;/label&gt;
+        &lt;input type=&quot;text&quot; id=&quot;Purpose_repairs&quot; name=&quot;Purpose_repairs&quot; required&gt;&lt;br&gt;&lt;br&gt;
+
+        &lt;!-- Añadir todos los campos faltantes con un valor predeterminado --&gt;
+        &lt;input type=&quot;hidden&quot; name=&quot;Sex_female&quot; value=&quot;0&quot;&gt;
+        &lt;input type=&quot;hidden&quot; name=&quot;Housing_rent&quot; value=&quot;0&quot;&gt;
+        &lt;input type=&quot;hidden&quot; name=&quot;Housing_free&quot; value=&quot;0&quot;&gt;
+        &lt;input type=&quot;hidden&quot; name=&quot;Saving_accounts_moderate&quot; value=&quot;0&quot;&gt;
+        &lt;input type=&quot;hidden&quot; name=&quot;Saving_accounts_rich&quot; value=&quot;0&quot;&gt;
+        &lt;input type=&quot;hidden&quot; name=&quot;Saving_accounts_nan&quot; value=&quot;0&quot;&gt;
+        &lt;input type=&quot;hidden&quot; name=&quot;Checking_account_little&quot; value=&quot;0&quot;&gt;
+        &lt;input type=&quot;hidden&quot; name=&quot;Checking_account_rich&quot; value=&quot;0&quot;&gt;
+        &lt;input type=&quot;hidden&quot; name=&quot;Checking_account_nan&quot; value=&quot;0&quot;&gt;
+        &lt;input type=&quot;hidden&quot; name=&quot;Purpose_radio/TV&quot; value=&quot;0&quot;&gt;
+        &lt;input type=&quot;hidden&quot; name=&quot;Purpose_furniture/equipment&quot; value=&quot;0&quot;&gt;
+        &lt;input type=&quot;hidden&quot; name=&quot;Purpose_new car&quot; value=&quot;0&quot;&gt;
+        &lt;input type=&quot;hidden&quot; name=&quot;Purpose_used car&quot; value=&quot;0&quot;&gt;
+        &lt;input type=&quot;hidden&quot; name=&quot;Purpose_business&quot; value=&quot;0&quot;&gt;
+        &lt;input type=&quot;hidden&quot; name=&quot;Purpose_domestic appliances&quot; value=&quot;0&quot;&gt;
+        &lt;input type=&quot;hidden&quot; name=&quot;Purpose_education&quot; value=&quot;0&quot;&gt;
+        &lt;input type=&quot;hidden&quot; name=&quot;Purpose_car&quot; value=&quot;0&quot;&gt;
+        &lt;input type=&quot;hidden&quot; name=&quot;Saving_accounts_quite rich&quot; value=&quot;0&quot;&gt;
+
+        &lt;input type=&quot;submit&quot; value=&quot;Predict&quot;&gt;
+    &lt;/form&gt;
+    &lt;h2 id=&quot;result&quot;&gt;&lt;/h2&gt;
+    &lt;h3 id=&quot;category&quot;&gt;&lt;/h3&gt;
+    &lt;script src=&quot;{{ url_for('static', filename='script.js') }}&quot;&gt;&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</div></section><section class="chapter"><h3 id="script-js" data-toc="script-js"><code class="code" id="-8zuqpw_77">script.js</code></h3><p id="-8zuqpw_78">El archivo JavaScript maneja la l&oacute;gica del formulario y la comunicaci&oacute;n con la API.</p><div class="code-block" data-lang="javascript">
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('prediction-form');
+    const resultDiv = document.getElementById('result');
+    const categoryDiv = document.getElementById('category');
+
+    form.addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const formData = new FormData(form);
+        const data = {};
+
+        formData.forEach((value, key) =&gt; {
+            data[key] = parseFloat(value) || value;
+        });
+
+        fetch('/predict', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            ```javascript
+            body: JSON.stringify(data)
+        })
+        .then(response =&gt; response.json())
+        .then(data =&gt; {
+            if (data.error) {
+                resultDiv.innerHTML = `Error: ${data.error}`;
+                categoryDiv.innerHTML = '';
+            } else {
+                resultDiv.innerHTML = `Prediction: ${data.prediction.toFixed(2)}`;
+                categoryDiv.innerHTML = `Category: ${data.prediction_category}`;
+            }
+        })
+        .catch(error =&gt; {
+            console.error('Error:', error);
+            resultDiv.innerHTML = 'Error al realizar la predicción';
+            categoryDiv.innerHTML = '';
+        });
+    });
+});
+</div></section><section class="chapter"><h3 id="style-css" data-toc="style-css"><code class="code" id="-8zuqpw_81">style.css</code></h3><p id="-8zuqpw_82">El archivo CSS define el estilo de la p&aacute;gina web para que se vea atractiva y profesional.</p><div class="code-block" data-lang="css">
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    width: 50%;
+    margin: 0 auto;
+    background-color: #ffffff;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    margin-top: 30px;
+}
+
+header {
+    text-align: center;
+}
+
+header img {
+    width: 100%;
+    border-radius: 8px 8px 0 0;
+}
+
+h1 {
+    color: #333333;
+}
+
+form {
+    margin-top: 20px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    color: #666666;
+    margin-bottom: 5px;
+}
+
+.form-group input[type=&quot;text&quot;] {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.form-group input[type=&quot;submit&quot;] {
+    width: 100%;
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.form-group input[type=&quot;submit&quot;]:hover {
+    background-color: #45a049;
+}
+
+#result, #category {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #e7f3e7;
+    border: 1px solid #c3e6c3;
+    border-radius: 4px;
+    color: #333333;
+    font-weight: bold;
+}
+</div></section></section><section class="chapter"><h2 id="c-mo-ejecutar-la-aplicaci-n" data-toc="c-mo-ejecutar-la-aplicaci-n">C&oacute;mo Ejecutar la Aplicaci&oacute;n</h2><section class="chapter"><h3 id="requisitos" data-toc="requisitos">Requisitos</h3><ol class="list _decimal" id="-8zuqpw_84" type="1"><li class="list__item" id="-8zuqpw_85"><p>Python 3.9 o superior</p></li><li class="list__item" id="-8zuqpw_86"><p>Flask</p></li><li class="list__item" id="-8zuqpw_87"><p>joblib</p></li></ol></section><section class="chapter"><h3 id="pasos-para-ejecutar" data-toc="pasos-para-ejecutar">Pasos para Ejecutar</h3><ol class="list _decimal" id="-8zuqpw_88" type="1"><li class="list__item" id="-8zuqpw_89"><p id="-8zuqpw_90">Clona el repositorio y navega al directorio del proyecto.</p></li><li class="list__item" id="-8zuqpw_91"><p id="-8zuqpw_92">Aseg&uacute;rate de tener todas las dependencias instaladas. Puedes instalarlas utilizando el siguiente comando:</p><div class="code-block" data-lang="bash">
+pip install -r requirements.txt
+</div></li><li class="list__item" id="-8zuqpw_94"><p id="-8zuqpw_95">Navega al directorio <code class="code" id="-8zuqpw_96">src</code> y ejecuta el archivo <code class="code" id="-8zuqpw_97">app.py</code>:</p><div class="code-block" data-lang="bash">
+cd src
+python app.py
+</div></li><li class="list__item" id="-8zuqpw_99"><p id="-8zuqpw_100">Abre tu navegador web y navega a <code class="code" id="-8zuqpw_101">http://127.0.0.1:5000</code> para acceder a la aplicaci&oacute;n.</p></li></ol></section><section class="chapter"><h3 id="uso" data-toc="uso">Uso</h3><ol class="list _decimal" id="-8zuqpw_102" type="1"><li class="list__item" id="-8zuqpw_103"><p>Ingresa los datos en el formulario presentado en la p&aacute;gina principal.</p></li><li class="list__item" id="-8zuqpw_104"><p>Haz clic en el bot&oacute;n &quot;Predict&quot; para obtener la predicci&oacute;n.</p></li><li class="list__item" id="-8zuqpw_105"><p>La predicci&oacute;n y la categor&iacute;a se mostrar&aacute;n en la parte inferior de la p&aacute;gina.</p></li></ol></section></section><section class="chapter"><h2 id="conclusi-n" data-toc="conclusi-n">Conclusi&oacute;n</h2><p id="-8zuqpw_106">Esta API de Flask permite a los usuarios realizar predicciones en tiempo real utilizando un modelo de Random Forest. La interfaz web facilita la interacci&oacute;n con la API y presenta los resultados de manera clara y concisa. Esta estructura modular permite una f&aacute;cil extensi&oacute;n y mantenimiento del c&oacute;digo.</p><p id="-8zuqpw_107">El resultado de la p&aacute;gina: <figure id="-8zuqpw_108"><img alt="model_api_1.png" src="images/model_api.png" title="model_api_1.png" width="458" height="566"></figure></p></section><div class="last-modified">Last modified: 20 junio 2024</div><div data-feedback-placeholder="true"></div><div class="navigation-links _bottom"><a href="06-app-basica.html" class="navigation-links__prev">Aplicaci&oacute;n B&aacute;sica de Visualizaci&oacute;n de Datos con Flask</a></div></article><div id="disqus_thread"></div></div></section></main></div><script src="https://resources.jetbrains.com/writerside/apidoc/6.10.0-b267/app.js"></script></body></html>

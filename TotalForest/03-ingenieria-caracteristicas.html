@@ -1,0 +1,191 @@
+<!DOCTYPE html SYSTEM "about:legacy-compat">
+<html lang="en-US" data-preset="contrast" data-primary-color="#307FFF"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta charset="UTF-8"><meta name="robots" content="noindex"><meta name="built-on" content="2024-06-20T08:05:37.720777108"><title>Feature Engineering | Instance Name</title><script type="application/json" id="virtual-toc-data">[{"id":"descripci-n-general","level":0,"title":"Descripción General","anchor":"#descripci-n-general"},{"id":"c-digo","level":0,"title":"Código","anchor":"#c-digo"},{"id":"descripci-n-de-m-todos","level":0,"title":"Descripción de Métodos","anchor":"#descripci-n-de-m-todos"},{"id":"resultados","level":0,"title":"Resultados","anchor":"#resultados"},{"id":"conclusi-n","level":0,"title":"Conclusión","anchor":"#conclusi-n"}]</script><script type="application/json" id="topic-shortcuts"></script><link href="https://resources.jetbrains.com/writerside/apidoc/6.10.0-b267/app.css" rel="stylesheet"><meta name="msapplication-TileColor" content="#000000"><link rel="apple-touch-icon" sizes="180x180" href="https://jetbrains.com/apple-touch-icon.png"><link rel="icon" type="image/png" sizes="32x32" href="https://jetbrains.com/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="https://jetbrains.com/favicon-16x16.png"><meta name="msapplication-TileImage" content="https://resources.jetbrains.com/storage/ui/favicons/mstile-144x144.png"><meta name="msapplication-square70x70logo" content="https://resources.jetbrains.com/storage/ui/favicons/mstile-70x70.png"><meta name="msapplication-square150x150logo" content="https://resources.jetbrains.com/storage/ui/favicons/mstile-150x150.png"><meta name="msapplication-wide310x150logo" content="https://resources.jetbrains.com/storage/ui/favicons/mstile-310x150.png"><meta name="msapplication-square310x310logo" content="https://resources.jetbrains.com/storage/ui/favicons/mstile-310x310.png"><meta name="image" content=""><!-- Open Graph --><meta property="og:title" content="Feature Engineering | Instance Name"><meta property="og:description" content=""><meta property="og:image" content=""><meta property="og:site_name" content="Instance Name Help"><meta property="og:type" content="website"><meta property="og:locale" content="en_US"><meta property="og:url" content="writerside-documentation/03-ingenieria-caracteristicas.html"><!-- End Open Graph --><!-- Twitter Card --><meta name="twitter:card" content="summary_large_image"><meta name="twitter:site" content=""><meta name="twitter:title" content="Feature Engineering | Instance Name"><meta name="twitter:description" content=""><meta name="twitter:creator" content=""><meta name="twitter:image:src" content=""><!-- End Twitter Card --><!-- Schema.org WebPage --><script type="application/ld+json">{
+    "@context": "http://schema.org",
+    "@type": "WebPage",
+    "@id": "writerside-documentation/03-ingenieria-caracteristicas.html#webpage",
+    "url": "writerside-documentation/03-ingenieria-caracteristicas.html",
+    "name": "Feature Engineering | Instance Name",
+    "description": "",
+    "image": "",
+    "inLanguage":"en-US"
+}</script><!-- End Schema.org --><!-- Schema.org WebSite --><script type="application/ld+json">{
+    "@type": "WebSite",
+    "@id": "writerside-documentation/#website",
+    "url": "writerside-documentation/",
+    "name": "Instance Name Help"
+}</script><!-- End Schema.org --></head><body data-id="03_ingenieria_caracteristicas" data-main-title="Feature Engineering" data-article-props="{&quot;seeAlsoStyle&quot;:&quot;links&quot;}" data-template="article" data-breadcrumbs=""><div class="wrapper"><main class="panel _main"><header class="panel__header"><div class="container"><h3>Instance Name  Help</h3><div class="panel-trigger"></div></div></header><section class="panel__content"><div class="container"><article class="article" data-shortcut-switcher="inactive"><h1 data-toc="03_ingenieria_caracteristicas" id="03_ingenieria_caracteristicas.md">Feature Engineering</h1><section class="chapter"><h2 id="descripci-n-general" data-toc="descripci-n-general">Descripci&oacute;n General</h2><p id="y6ef9u_6">La clase <code class="code" id="y6ef9u_7">FeatureEngineering</code> se encarga de la creaci&oacute;n, escalado y divisi&oacute;n de caracter&iacute;sticas del conjunto de datos de cr&eacute;dito. Su objetivo es preparar los datos para su posterior uso en modelos de machine learning.</p></section><section class="chapter"><h2 id="c-digo" data-toc="c-digo">C&oacute;digo</h2><div class="code-block" data-lang="python">
+import pandas as pd
+from sklearn.preprocessing import StandardScaler, OneHotEncoder, LabelEncoder
+from sklearn.compose import ColumnTransformer
+from sklearn.pipeline import Pipeline
+from sklearn.model_selection import train_test_split
+import os
+from src.logger import CustomLogger
+
+class FeatureEngineering:
+    def __init__(self, data, output_path, logger):
+        self.data = data
+        self.output_path = output_path
+        self.logger = logger
+
+    def create_features(self):
+        try:
+            # Ejemplo de creación de una nueva característica
+            self.data['CreditAmountPerMonth'] = self.data['Credit amount'] / self.data['Duration']
+            self.logger.info('Nuevas características creadas.')
+            print(&quot;Nuevas características creadas.&quot;)
+            return self.data
+        except Exception as e:
+            self.logger.error(f'Error al crear nuevas características: {e}')
+            print(f'Error al crear nuevas características: {e}')
+            raise
+
+    def scale_features(self):
+        try:
+            # Separar la variable objetivo antes de las transformaciones
+            y = self.data['Risk']
+            X = self.data.drop(columns=['Risk'])
+
+            # Imprimir los datos después de separar la variable objetivo
+            print(&quot;Datos después de separar la variable objetivo:&quot;)
+            print(X.head())
+
+            # Separar características numéricas y categóricas
+            numeric_features = X.select_dtypes(include=['int64', 'float64']).columns
+            categorical_features = X.select_dtypes(include=['object', 'category']).columns
+
+            # Imprimir las características numéricas y categóricas
+            print(&quot;Características numéricas:&quot;, numeric_features)
+            print(&quot;Características categóricas:&quot;, categorical_features)
+
+            # Pipelines de preprocesamiento para características numéricas y categóricas
+            numeric_transformer = Pipeline(steps=[
+                ('scaler', StandardScaler())
+            ])
+
+            categorical_transformer = Pipeline(steps=[
+                ('onehot', OneHotEncoder(handle_unknown='ignore'))
+            ])
+
+            # Aplicar preprocesamiento
+            preprocessor = ColumnTransformer(
+                transformers=[
+                    ('num', numeric_transformer, numeric_features),
+                    ('cat', categorical_transformer, categorical_features)
+                ])
+
+            # Ajustar el preprocesador y transformar los datos
+            print(&quot;Ajustando el preprocesador...&quot;)
+            X_processed = preprocessor.fit_transform(X)
+            print(&quot;Preprocesador ajustado y datos transformados.&quot;)
+
+            # Obtener los nombres de las características resultantes
+            feature_names_num = numeric_features.tolist()
+            print(&quot;Nombres de características numéricas:&quot;, feature_names_num)
+
+            # Comprobar si hay características categóricas antes de intentar obtener sus nombres
+            if categorical_features.size &gt; 0:
+                feature_names_cat = preprocessor.named_transformers_['cat'].named_steps['onehot'].get_feature_names_out(categorical_features).tolist()
+                print(&quot;Nombres de características categóricas:&quot;, feature_names_cat)
+                feature_names = feature_names_num + feature_names_cat
+            else:
+                feature_names = feature_names_num
+
+            print(&quot;Nombres de todas las características:&quot;, feature_names)
+
+            # Convertir el resultado de vuelta a un DataFrame
+            X_processed = pd.DataFrame(X_processed, columns=feature_names)
+            X_processed['Risk'] = y.reset_index(drop=True)
+
+            self.data = X_processed
+
+            # Guardar los datos escalados
+            scaled_data_path = os.path.join(self.output_path, 'scaled_data.csv')
+            self.data.to_csv(scaled_data_path, index=False)
+
+            self.logger.info('Características escaladas y datos guardados.')
+            print(&quot;Características escaladas y datos guardados.&quot;)
+            return self.data
+        except Exception as e:
+            self.logger.error(f'Error al escalar características: {e}')
+            print(f'Error al escalar características: {e}')
+            raise
+
+    def split_data(self, test_size=0.2, random_state=42):
+        try:
+            # Separar la variable objetivo y las características
+            y = self.data['Risk']
+            X = self.data.drop(columns=['Risk'])
+
+            # Dividir los datos en conjuntos de entrenamiento y prueba
+            X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=random_state)
+
+            # Guardar los conjuntos de datos en archivos
+            train_data = pd.DataFrame(X_train)
+            test_data = pd.DataFrame(X_test)
+            train_data['Risk'] = y_train
+            test_data['Risk'] = y_test
+
+            train_path = os.path.join(self.output_path, 'train_data.csv')
+            test_path = os.path.join(self.output_path, 'test_data.csv')
+
+            train_data.to_csv(train_path, index=False)
+            test_data.to_csv(test_path, index=False)
+
+            self.logger.info('Datos divididos en conjuntos de entrenamiento y prueba.')
+            print(&quot;Datos divididos en conjuntos de entrenamiento y prueba.&quot;)
+            return X_train, X_test, y_train, y_test
+        except Exception as e:
+            self.logger.error(f'Error al dividir los datos: {e}')
+            print(f'Error al dividir los datos: {e}')
+            raise
+
+
+# Uso de la clase FeatureEngineering
+if __name__ == &quot;__main__&quot;:
+    CSV_PATH = '../data/raw/german_credit_data.csv'
+    OUTPUT_PATH = '../output'
+
+    # Instanciar el logger
+    logger = CustomLogger().get_logger()
+
+    # Cargar datos
+    data = pd.read_csv(CSV_PATH)
+
+    # Crear instancia de FeatureEngineering
+    feature_engineer = FeatureEngineering(data, OUTPUT_PATH, logger)
+
+    # Crear nuevas características
+    feature_engineer.create_features()
+
+    # Escalar características
+    feature_engineer.scale_features()
+
+    # Dividir el conjunto de datos
+    feature_engineer.split_data()
+</div></section><section class="chapter"><h2 id="descripci-n-de-m-todos" data-toc="descripci-n-de-m-todos">Descripci&oacute;n de M&eacute;todos</h2><section class="chapter"><h3 id="init" data-toc="init"><code class="code" id="y6ef9u_10">__init__</code></h3><ul class="list _bullet" id="y6ef9u_11"><li class="list__item" id="y6ef9u_12"><p>Inicializa la clase con los datos, la ruta de salida y el logger.</p></li></ul></section><section class="chapter"><h3 id="create-features" data-toc="create-features"><code class="code" id="y6ef9u_14">create_features</code></h3><ul class="list _bullet" id="y6ef9u_15"><li class="list__item" id="y6ef9u_16"><p>Crea una nueva caracter&iacute;stica <code class="code" id="y6ef9u_17">CreditAmountPerMonth</code> dividiendo el monto del cr&eacute;dito por la duraci&oacute;n del cr&eacute;dito.</p></li><li class="list__item" id="y6ef9u_18"><p>Registra un mensaje de &eacute;xito si la creaci&oacute;n de caracter&iacute;sticas se realiza correctamente, o un mensaje de error si ocurre alg&uacute;n problema.</p></li></ul></section><section class="chapter"><h3 id="scale-features" data-toc="scale-features"><code class="code" id="y6ef9u_20">scale_features</code></h3><ul class="list _bullet" id="y6ef9u_21"><li class="list__item" id="y6ef9u_22"><p>Separa la variable objetivo (<code class="code" id="y6ef9u_23">Risk</code>) de las caracter&iacute;sticas.</p></li><li class="list__item" id="y6ef9u_24"><p>Define y aplica pipelines de preprocesamiento para caracter&iacute;sticas num&eacute;ricas y categ&oacute;ricas utilizando <code class="code" id="y6ef9u_25">StandardScaler</code> y <code class="code" id="y6ef9u_26">OneHotEncoder</code>.</p></li><li class="list__item" id="y6ef9u_27"><p>Transforma los datos y guarda el conjunto de datos escalados en un archivo CSV.</p></li><li class="list__item" id="y6ef9u_28"><p>Registra un mensaje de &eacute;xito si el escalado de caracter&iacute;sticas se realiza correctamente, o un mensaje de error si ocurre alg&uacute;n problema.</p></li></ul></section><section class="chapter"><h3 id="split-data" data-toc="split-data"><code class="code" id="y6ef9u_30">split_data</code></h3><ul class="list _bullet" id="y6ef9u_31"><li class="list__item" id="y6ef9u_32"><p>Separa la variable objetivo (<code class="code" id="y6ef9u_33">Risk</code>) de las caracter&iacute;sticas.</p></li><li class="list__item" id="y6ef9u_34"><p>Divide los datos en conjuntos de entrenamiento y prueba utilizando <code class="code" id="y6ef9u_35">train_test_split</code>.</p></li><li class="list__item" id="y6ef9u_36"><p>Guarda los conjuntos de datos en archivos CSV.</p></li><li class="list__item" id="y6ef9u_37"><p>Registra un mensaje de &eacute;xito si la divisi&oacute;n de datos se realiza correctamente, o un mensaje de error si ocurre alg&uacute;n problema.</p></li></ul></section></section><section class="chapter"><h2 id="resultados" data-toc="resultados">Resultados</h2><section class="chapter"><h3 id="creaci-n-de-nuevas-caracter-sticas" data-toc="creaci-n-de-nuevas-caracter-sticas">Creaci&oacute;n de Nuevas Caracter&iacute;sticas</h3><div class="code-block" data-lang="none">
+Nuevas características creadas.
+</div><ul class="list _bullet" id="y6ef9u_39"><li class="list__item" id="y6ef9u_40"><p><span class="control" id="y6ef9u_41">Descripci&oacute;n:</span> La nueva caracter&iacute;stica <code class="code" id="y6ef9u_42">CreditAmountPerMonth</code> se crea dividiendo el monto del cr&eacute;dito por la duraci&oacute;n del cr&eacute;dito.</p></li></ul></section><section class="chapter"><h3 id="escalado-de-caracter-sticas" data-toc="escalado-de-caracter-sticas">Escalado de Caracter&iacute;sticas</h3><div class="code-block" data-lang="none">
+Datos después de separar la variable objetivo:
+   Unnamed: 0  Age  Credit amount  Duration  ...  Saving accounts  Checking account  Purpose  CreditAmountPerMonth
+0          67   30          1000        24  ...              0.0               0.0      0.0              41.666667
+1          22   22          5951        48  ...              0.0               0.0      0.0             124.020833
+2          49   49          2096        12  ...              0.0               0.0      0.0             174.666667
+3          45   45          7882        42  ...              0.0               0.0      0.0             187.666667
+4          53   53          4870        24  ...              0.0               0.0      0.0             202.916667
+
+Características numéricas: Index(['Unnamed: 0', 'Age', 'Credit amount', 'Duration', 'CreditAmountPerMonth'], dtype='object')
+Características categóricas: Index(['Sex', 'Job', 'Housing', 'Saving accounts', 'Checking account', 'Purpose'], dtype='object')
+
+Ajustando el preprocesador...
+Preprocesador ajustado y datos transformados.
+
+Nombres de características numéricas: ['Unnamed: 0', 'Age', 'Credit amount', 'Duration', 'CreditAmountPerMonth']
+Nombres de características categóricas: ['Sex_female', 'Sex_male', 'Job_0', 'Job_1', 'Job_2', 'Job_3', 'Housing_free', 'Housing_own', 'Housing_rent', 'Saving accounts_little', 'Saving accounts_moderate', 'Saving accounts_quite rich', 'Saving accounts_rich', 'Saving accounts_unknown', 'Checking account_little', 'Checking account_moderate', 'Checking account_rich', 'Checking account_unknown', 'Purpose_business', 'Purpose_car', 'Purpose_domestic appliances', 'Purpose_education', '```markdown
+'Purpose_furniture/equipment', 'Purpose_radio/TV', 'Purpose_repairs', 'Purpose_vacation/others']
+Nombres de todas las características: ['Unnamed: 0', 'Age', 'Credit amount', 'Duration', 'CreditAmountPerMonth', 'Sex_female', 'Sex_male', 'Job_0', 'Job_1', 'Job_2', 'Job_3', 'Housing_free', 'Housing_own', 'Housing_rent', 'Saving accounts_little', 'Saving accounts_moderate', 'Saving accounts_quite rich', 'Saving accounts_rich', 'Saving accounts_unknown', 'Checking account_little', 'Checking account_moderate', 'Checking account_rich', 'Checking account_unknown', 'Purpose_business', 'Purpose_car', 'Purpose_domestic appliances', 'Purpose_education', 'Purpose_furniture/equipment', 'Purpose_radio/TV', 'Purpose_repairs', 'Purpose_vacation/others']
+
+Características escaladas y datos guardados.
+</div><ul class="list _bullet" id="y6ef9u_44"><li class="list__item" id="y6ef9u_45"><p><span class="control" id="y6ef9u_46">Descripci&oacute;n:</span> Los datos se escalan utilizando <code class="code" id="y6ef9u_47">StandardScaler</code> para caracter&iacute;sticas num&eacute;ricas y <code class="code" id="y6ef9u_48">OneHotEncoder</code> para caracter&iacute;sticas categ&oacute;ricas. Los datos escalados se guardan en <code class="code" id="y6ef9u_49">scaled_data.csv</code>.</p></li></ul></section><section class="chapter"><h3 id="divisi-n-de-datos" data-toc="divisi-n-de-datos">Divisi&oacute;n de Datos</h3><div class="code-block" data-lang="none">
+Datos divididos en conjuntos de entrenamiento y prueba.
+</div><ul class="list _bullet" id="y6ef9u_51"><li class="list__item" id="y6ef9u_52"><p><span class="control" id="y6ef9u_53">Descripci&oacute;n:</span> Los datos se dividen en conjuntos de entrenamiento y prueba con un tama&ntilde;o de prueba del 20%. Los conjuntos de datos resultantes se guardan en <code class="code" id="y6ef9u_54">train_data.csv</code> y <code class="code" id="y6ef9u_55">test_data.csv</code>.</p></li></ul></section></section><section class="chapter"><h2 id="conclusi-n" data-toc="conclusi-n">Conclusi&oacute;n</h2><p id="y6ef9u_56">La clase <code class="code" id="y6ef9u_57">FeatureEngineering</code> facilita la preparaci&oacute;n de datos mediante la creaci&oacute;n de nuevas caracter&iacute;sticas, el escalado de datos y la divisi&oacute;n en conjuntos de entrenamiento y prueba. Esto es esencial para el modelado efectivo y preciso en machine learning.</p></section><div class="last-modified">Last modified: 20 junio 2024</div><div data-feedback-placeholder="true"></div><div class="navigation-links _bottom"><a href="02-data-procesador.html" class="navigation-links__prev">Data Processor</a><a href="04-modelamiento.html" class="navigation-links__next">Modelamiento: Ramdom Forest y Decision Tree</a></div></article><div id="disqus_thread"></div></div></section></main></div><script src="https://resources.jetbrains.com/writerside/apidoc/6.10.0-b267/app.js"></script></body></html>
